@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useAuth } from "./AuthContext";
 
 function ClauseSubmitForm() {
+  const { token } = useAuth();
   const [form, setForm] = useState({
     user_id: "",
     title: "",
@@ -21,7 +23,11 @@ function ClauseSubmitForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:8000/clause/submit", form);
+      const res = await axios.post("http://localhost:8000/clause/submit", form, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       setMessage("Clause submitted successfully! ID: " + res.data.clause_id);
     } catch (err) {
       setMessage("Error submitting clause.");
